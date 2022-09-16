@@ -72,11 +72,16 @@ names(chrono) <- c("Era", "Period", "Epoch")
 chrono <- chrono[order(chrono$Era ),]
 
 ui <- fluidPage(
+  tags$head(
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }")
+  ),
   navbarPage(
     theme = shinytheme("flatly"), collapsible = TRUE, header = NULL, footer = NULL,
     title = "CHIP", 
     windowTitle = "CHIP: geoCHronology Interactive Personal database",
-    ## Panel: About
+    ## Panel: About ---------
     tabPanel("About",
       mainPanel(imageOutput("geochronimg"),
                 br(),br(),br(),br(),br(), br(),br(), br(),br(),
@@ -85,9 +90,6 @@ ui <- fluidPage(
       ),
     ## Panel: Search data ----------------------------------------------------------------
     navbarMenu("Search Data", 
-      tags$style(type="text/css",
-                 ".shiny-output-error { visibility: hidden; }",
-                 ".shiny-output-error:before { visibility: hidden; }"),
       ## reference -----------------------------------------------------
       "Reference",
         tabPanel("Method",
@@ -316,10 +318,12 @@ ui <- fluidPage(
     navbarMenu("Board",
       tabPanel("FAQ"),
       tabPanel("Contact",
+        mainPanel(
                h3("Name: Su-Min,Yang"),
                h3("Contact: +82-42-821-7567"),
                h3("E-Mail: sumineee@o.cnu.ac.kr")
-               )
+        )
       )
+    )
   )
 )
