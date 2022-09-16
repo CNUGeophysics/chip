@@ -3738,7 +3738,7 @@ server <- function(input, output, session){
   
   observeEvent(input$filevalue,{
     
-    load("RData/Temp/value_num.RData")
+    value_num <- data.frame()
     
     value_num <- data.frame(length(input$filevalue$datapath))
     names(value_num) <- c("N")
@@ -3749,7 +3749,7 @@ server <- function(input, output, session){
     load("RData/Temp/temp_spl.RData")
     load("RData/Temp/temp_age.RData")
     
-    load( "RData/Temp/eventLog.RData")
+  
     eventLog <- data.frame()
     
     num <- as.numeric(value_num$N)
