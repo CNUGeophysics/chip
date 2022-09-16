@@ -4664,6 +4664,10 @@ server <- function(input, output, session){
         age_custom <- rbind(age_custom, temp_age)
       }
       
+    }else{
+      ref_custom <- temp_ref
+      spl_custom <- temp_spl
+      age_custom <- temp_age
     }
     
     # submit information ------------------------------------------------------

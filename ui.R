@@ -19,6 +19,13 @@ load("RData/OrgRData/value_osl.RData")
 load("RData/OrgRData/value_smnd.RData")
 load("RData/OrgRData/value_upb.RData")
 
+# Make user directories -----------------------
+if(!file.exists("RData/UserFile")){
+  dir.create("RData/UserFile")
+  dir.create("RData/UserRData")
+  dir.create("RData/Temp")
+}
+
 # Load user (custom) RData sets if exist --------------------------------------
 if (file.exists("RData/UserRData/ref_custom.RData")) {
   load("RData/UserRData/ref_custom.RData")
