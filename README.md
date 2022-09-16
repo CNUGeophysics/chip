@@ -4,6 +4,6 @@ CHIP is a R-based personal database managament tool for geochronological data. F
 
 This repository is used for testing for CHIP GitHub.
 
-The offical repository will be released soon.
+The official repository will be released soon.
 
 This repo is in action!

@@ -60,7 +60,7 @@ server <- function(input, output, session){
     photo <- normalizePath(file.path('RData/ChronostratChart.png'))
     list(src = photo,
          width = 800)
-  })  
+  }, deleteFile = FALSE)  
   
   # Reference Method -------------------------------------------------------------------------
   
