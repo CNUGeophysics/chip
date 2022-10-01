@@ -187,7 +187,7 @@ ui <- fluidPage(
         )
     ), # end of Search Data
     ## Panel: Submit Data ----------------------------------------------------             
-    navbarMenu("Submit Data",
+    navbarMenu("Upload",
       tabPanel("Guideline",
         sidebarLayout(
           sidebarPanel(
