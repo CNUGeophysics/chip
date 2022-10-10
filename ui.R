@@ -83,10 +83,7 @@ ui <- fluidPage(
     windowTitle = "CHIP: geoCHronology Interactive Personal database",
     ## Panel: About ---------
     tabPanel("About",
-      mainPanel(imageOutput("geochronimg"),
-                br(),br(),br(),br(),br(), br(),br(), br(),br(),
-                h3(HTML("<b>About CHIP</b>: geo<b>CH</b>ronology <b>I</b>nteractive <b>P</b>ersonal database"))
-                )
+            includeHTML("/Users/sumin/Desktop/shinyall/CSS/About.html")
       ),
     ## Panel: Search data ----------------------------------------------------------------
     navbarMenu("Search Data", 
