@@ -55,13 +55,7 @@ server <- function(input, output, session){
     max(num)
   }
   
-  # geochronology imagge render -----------------------------------------------
-  output$geochronimg <-renderImage({
-    photo <- normalizePath(file.path('RData/ChronostratChart.png'))
-    list(src = photo,
-         width = 800)
-  }, deleteFile = FALSE)  
-  
+
   # Reference Method -------------------------------------------------------------------------
   
   refmetdata <- reactive({
