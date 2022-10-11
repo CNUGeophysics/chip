@@ -83,7 +83,7 @@ ui <- fluidPage(
     windowTitle = "CHIP: geoCHronology Interactive Personal database",
     ## Panel: About ---------
     tabPanel("About",
-            includeHTML("RData/About.html")
+             htmlOutput("abt")
       ),
     ## Panel: Search data ----------------------------------------------------------------
     navbarMenu("Search Data", 
@@ -184,8 +184,8 @@ ui <- fluidPage(
         )
     ), # end of Search Data
     ## Panel: Submit Data ----------------------------------------------------             
-    navbarMenu("Upload",
-      tabPanel("Guideline",
+    
+      tabPanel("Upload Template",
         sidebarLayout(
           sidebarPanel(
             tags$h4("Infomation Template"),
@@ -206,14 +206,15 @@ ui <- fluidPage(
             br(),br(),
             downloadButton("DBupb", "U-Pb")
           ),
-          mainPanel("null") #htmlOutput("template"))
+          mainPanel(htmlOutput("template"))
         )
-      ),
+      )
+    ,
       # Submission process ----------------------------------------------------
       tabPanel("Submit Data",
-        navbarPage(title = "STEP", id = "tabs",
+        navbarPage(title = "STEP", id = "tabs", br(),
           # panel 1 -----------------------------------------------------------------
-          tabPanel(title = "Step 1",
+          tabPanel(title = "Step 1", style='margin-top: -25px',
             sidebarLayout(
               sidebarPanel(
                 h4(HTML("<b>Check Duplicates</b>"), style = "color:red"),
@@ -309,18 +310,7 @@ ui <- fluidPage(
             )
           )
         )
-      )
-    ),
-    ## Panel: Board ----------------------------------------------------   
-    navbarMenu("Board",
-      tabPanel("FAQ"),
-      tabPanel("Contact",
-        mainPanel(
-               h3("Name: Su-Min,Yang"),
-               h3("Contact: +82-42-821-7567"),
-               h3("E-Mail: sumineee@o.cnu.ac.kr")
-        )
-      )
     )
+
   )
 )

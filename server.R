@@ -55,7 +55,15 @@ server <- function(input, output, session){
     max(num)
   }
   
+  # insert about html-------------------------------------------------------------------------
+  
+output$abt <- renderUI({
+  
+  includeHTML("www/About.html")
+  
+})
 
+  
   # Reference Method -------------------------------------------------------------------------
   
   refmetdata <- reactive({
@@ -3103,7 +3111,7 @@ server <- function(input, output, session){
   
   output$template <- renderUI({
     
-    tags$iframe(src = "hwpTopdf_fn.pdf", style = "height:800px; width:100%; scrolling = yes")
+    tags$iframe(src = "manual.pdf", style = "height:800px; width:100%; scrolling = yes")
     
   })
   
