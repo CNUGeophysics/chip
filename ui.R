@@ -88,7 +88,7 @@ ui <- fluidPage(
     ## Panel: Search data ----------------------------------------------------------------
     navbarMenu("Search Data", 
       ## reference -----------------------------------------------------
-      "Reference",
+      "By References",
         tabPanel("Method",
             sidebarLayout(
               sidebarPanel(
@@ -125,7 +125,7 @@ ui <- fluidPage(
         ),
       "----", 
       ## analysis value -----------------------------------------------------
-      "Analysis Value",
+      "By Isotope Data",
         tabPanel("Method",
             sidebarLayout(
               sidebarPanel(
@@ -140,13 +140,13 @@ ui <- fluidPage(
               mainPanel(
                 h3(HTML("<b>Sample Information</b>")),
                 DTOutput("splmettbl"),
-                h3(HTML("<b>Analysis Value</b>")),
+                h3(HTML("<b>Isotope Data</b>")),
                 DTOutput("subsplmettbl")
               )
             )
           ),
         tabPanel("Geological Age",
-            tabPanel("Chronostratigraphy", hr(),
+            tabPanel("Chronostratigraphy", #hr(),
               sidebarLayout(
                 sidebarPanel(
                   selectInput("splera", "Era", choices = unique(chrono$Era)),
@@ -167,7 +167,7 @@ ui <- fluidPage(
           ),
       "----",
       ## Map -----------------------------------------------------
-      "Map",
+      "By Location",
         tabPanel("Map",
           sidebarLayout(
             sidebarPanel(
@@ -183,9 +183,8 @@ ui <- fluidPage(
           )
         )
     ), # end of Search Data
-    ## Panel: Submit Data ----------------------------------------------------             
-    
-      tabPanel("Upload Template",
+    ## Panel: Submit Data ----------------------------------------------------  
+      tabPanel("Submission Manual",
         sidebarLayout(
           sidebarPanel(
             tags$h4("Infomation Template"),
@@ -212,7 +211,7 @@ ui <- fluidPage(
     ,
       # Submission process ----------------------------------------------------
       tabPanel("Submit Data",
-        navbarPage(title = "STEP", id = "tabs", br(),
+        navbarPage(title = "STEP", id = "tabs",
           # panel 1 -----------------------------------------------------------------
           tabPanel(title = "Step 1", style='margin-top: -25px',
             sidebarLayout(
