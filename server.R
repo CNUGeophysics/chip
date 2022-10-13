@@ -3084,7 +3084,8 @@ output$abt <- renderUI({
   output$mapping <- renderLeaflet({
     
     leaflet(mapdata()) %>% 
-      addTiles() %>% 
+      #addTiles() %>% 
+      addProviderTiles(providers$Stamen.Terrain,options = providerTileOptions(noWrap = TRUE)) %>%
       addCircleMarkers(
         lng = ~round(as.numeric(mapdata()$Longitude), 4),
         lat = ~round(as.numeric(mapdata()$Latitude), 4), 
