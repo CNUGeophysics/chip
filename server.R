@@ -3080,28 +3080,48 @@ output$abt <- renderUI({
   pal <- colorFactor(palette = c("red", "blue", "purple", "darkgreen", "yellow"),
                      levels = c(1:5))
   
+  # observeEvent(
+  #   eventExpr = input$mapping_zoom, {
+  #     print(input$mapping_zoom)           # Display zoom level in the console
+  #     leafletProxy(
+  #       mapId = "mapping", 
+  #       session = session
+  #     )
+  #   }
+  # )
   
   output$mapping <- renderLeaflet({
-    
+    # wt <- input$mapping_zoom
     leaflet(mapdata()) %>% 
-      #addTiles() %>% 
-      addProviderTiles(providers$Stamen.Terrain,options = providerTileOptions(noWrap = TRUE)) %>%
+      # default view
+      setView(lat = 36, lng = 128, zoom = 7) %>%
+      # base groups
+      addTiles(group="Default") %>%
+      addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
+      addProviderTiles(providers$Stamen.Terrain, group="Terrain") %>%
+      
       addCircleMarkers(
         lng = ~round(as.numeric(mapdata()$Longitude), 4),
-        lat = ~round(as.numeric(mapdata()$Latitude), 4), 
+        lat = ~round(as.numeric(mapdata()$Latitude), 4),
         radius = 1.5,
-        stroke = F, 
+        #weight = wt,
+        stroke = F,
         fillOpacity = 1,
         color = ~pal(mapdata()$material_num),
         popup = ~paste("Sample: ", mapdata()$Sample, "<br/>",
                        "Method: ", mapdata()$Method, "<br/>",
                        "Taxon: ", mapdata()$Taxon, "<br/>",
                        "Lon: ", mapdata()$Longitude, "<br/>",
-                       "Lat: ", mapdata()$Latitude)) %>% 
+                       "Lat: ", mapdata()$Latitude)) %>%
       addScaleBar(position = "topright") %>% 
       addLegend(colors = c("red", "blue", "purple", "darkgreen", "yellow"),
                 labels = c("Igneous Rock", "Sedimentary Rock", "Metamorphic Rock", "Deposit", "Clay"),
-                position = "bottomleft")
+                position = "bottomleft") %>% 
+      # Layers control
+      addLayersControl(
+        baseGroups = c("Default", "Toner Lite", "Terrain"),
+        options = layersControlOptions(collapsed = FALSE)
+      )
   })
   
   
