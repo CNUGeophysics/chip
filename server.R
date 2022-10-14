@@ -3080,20 +3080,21 @@ output$abt <- renderUI({
   pal <- colorFactor(palette = c("red", "blue", "purple", "darkgreen", "yellow"),
                      levels = c(1:5))
   
-  # observeEvent(
-  #   eventExpr = input$mapping_zoom, {
-  #     print(input$mapping_zoom)           # Display zoom level in the console
-  #     leafletProxy(
-  #       mapId = "mapping", 
-  #       session = session
-  #     )
-  #   }
-  # )
+  observeEvent(
+    eventExpr = input$mapping_zoom, {
+      #print(input$mapping_zoom)           # Display zoom level in the console
+      #print(input$mapping_land_shape_mouseover)
+      #new_zoom <- 7
+      #if(!is.null(input$mapping_zoom)) new_zoom <- input$mapping_zoom
+      leafletProxy(
+        mapId = "mapping",
+        session = session
+      )%>% clearShapes()
+    }
+  )
   
   output$mapping <- renderLeaflet({
-    # wt <- input$mapping_zoom
     leaflet(mapdata()) %>% 
-      # default view
       setView(lat = 36, lng = 128, zoom = 7) %>%
       # base groups
       addTiles(group="Default") %>%
@@ -3104,7 +3105,13 @@ output$abt <- renderUI({
         lng = ~round(as.numeric(mapdata()$Longitude), 4),
         lat = ~round(as.numeric(mapdata()$Latitude), 4),
         radius = 1.5,
-        #weight = wt,
+        # weight = case_when(input$mapping_zoom <=4 ~1, 
+        #                     input$mapping_zoom ==5 ~2, 
+        #                     input$mapping_zoom ==6 ~3, 
+        #                     input$mapping_zoom ==7 ~1, 
+        #                     input$mapping_zoom ==8 ~7, 
+        #                     input$mapping_zoom ==9 ~9, 
+        #                     input$mapping_zoom >9 ~11),
         stroke = F,
         fillOpacity = 1,
         color = ~pal(mapdata()$material_num),
