@@ -3072,8 +3072,18 @@ output$abt <- renderUI({
     }else if(input$mapmet != "ALL" & input$mapage == "ALL"){
       age  <- age[age$Method %in% input$mapmet,]
     }else if(input$mapmet != "ALL" & input$mapage != "ALL"){
-      age  <- age[age$Method %in% input$mapmet,] %>% 
-      filter(Era == input$mapage)
+      age  <- age[age$Method %in% input$mapmet,]
+      age <- age[,-c(12)]
+      age <- age %>% 
+        filter(Era == input$mapage)
+      
+      if(nrow(age) == 0){
+        shinyalert(inputId = "map_alr", "No Information!", 
+                   "Please, Select a different Method and Age", type = "info",
+                   confirmButtonText = "OK")
+      }else if(nrow(age) != 0){
+        age
+      }
     }
   })
   
@@ -3379,12 +3389,8 @@ output$abt <- renderUI({
                                 na = "NA"))
         
         output$duplispl <- renderDataTable(
-          
           Sample
-          
         )
-        
-        
       }else if(vname == "Age"){
         
         assign(vname, read_xlsx(input$dupliinfo$datapath, sheet = "Age",
