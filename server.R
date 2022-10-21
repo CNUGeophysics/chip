@@ -3076,64 +3076,57 @@ output$abt <- renderUI({
       age <- age[,-c(12)]
       age <- age %>% 
         filter(Era == input$mapage)
-      
-      if(nrow(age) == 0){
-        shinyalert(inputId = "map_alr", "No Information!", 
-                   "Please, Select a different Method and Age", type = "info",
-                   confirmButtonText = "OK")
-      }else if(nrow(age) != 0){
-        age
-      }
     }
   })
   
   pal <- colorFactor(palette = c("red", "blue", "purple", "darkgreen", "yellow"),
                      levels = c(1:5))
   
-  observeEvent(
-    eventExpr = input$mapping_zoom, {
-      #print(input$mapping_zoom)           # Display zoom level in the console
-      #print(input$mapping_land_shape_mouseover)
-      #new_zoom <- 7
-      #if(!is.null(input$mapping_zoom)) new_zoom <- input$mapping_zoom
-      leafletProxy(
-        mapId = "mapping",
-        session = session
-      )%>% clearShapes()
+
+  observeEvent(req(input$mapmet, input$mapage),{
+    
+    if(nrow(mapdata()) == 0){
+      shinyalert(inputId = "map_alr", "No Information!",
+                 "Please, Select a different Method and Era", type = "info",
+                 confirmButtonText = "OK")
+    }else if(nrow(mapdata()) != 0){
+      observeEvent(input$mapping_zoom, {
+        new_zoom <- 7
+        if(!is.null(input$mapping_zoom)) new_zoom <- input$mapping_zoom
+        
+        leafletProxy(
+          mapId = "mapping",
+          session = session
+        ) %>% clearShapes() %>%
+          addCircleMarkers(data = mapdata(),
+                           lng = ~round(as.numeric(mapdata()$Longitude), 4),
+                           lat = ~round(as.numeric(mapdata()$Latitude), 4),
+                           radius = 1.5,
+                           stroke = T,
+                           fillOpacity = 1.5,
+                           color = ~pal(mapdata()$material_num),
+                           popup = ~paste("Sample: ", mapdata()$Sample, "<br/>",
+                                          "Era: ", mapdata()$Era, "<br/>",
+                                          "Method: ", mapdata()$Method, "<br/>",
+                                          "Taxon: ", mapdata()$Taxon, "<br/>",
+                                          "Lon: ", mapdata()$Longitude, "<br/>",
+                                          "Lat: ", mapdata()$Latitude))
+      })
     }
-  )
-  
+  })
+ 
+
   output$mapping <- renderLeaflet({
-    leaflet(mapdata()) %>% 
+    leaflet(mapdata()) %>%
       setView(lat = 36, lng = 128, zoom = 7) %>%
       # base groups
       addTiles(group="Default") %>%
       addProviderTiles("Stamen.TonerLite", group = "Toner Lite") %>%
       addProviderTiles(providers$Stamen.Terrain, group="Terrain") %>%
-      
-      addCircleMarkers(
-        lng = ~round(as.numeric(mapdata()$Longitude), 4),
-        lat = ~round(as.numeric(mapdata()$Latitude), 4),
-        radius = 1.5,
-        # weight = case_when(input$mapping_zoom <=4 ~1, 
-        #                     input$mapping_zoom ==5 ~2, 
-        #                     input$mapping_zoom ==6 ~3, 
-        #                     input$mapping_zoom ==7 ~1, 
-        #                     input$mapping_zoom ==8 ~7, 
-        #                     input$mapping_zoom ==9 ~9, 
-        #                     input$mapping_zoom >9 ~11),
-        stroke = F,
-        fillOpacity = 1,
-        color = ~pal(mapdata()$material_num),
-        popup = ~paste("Sample: ", mapdata()$Sample, "<br/>",
-                       "Method: ", mapdata()$Method, "<br/>",
-                       "Taxon: ", mapdata()$Taxon, "<br/>",
-                       "Lon: ", mapdata()$Longitude, "<br/>",
-                       "Lat: ", mapdata()$Latitude)) %>%
-      addScaleBar(position = "topright") %>% 
+      addScaleBar(position = "topright") %>%
       addLegend(colors = c("red", "blue", "purple", "darkgreen", "yellow"),
                 labels = c("Igneous Rock", "Sedimentary Rock", "Metamorphic Rock", "Deposit", "Clay"),
-                position = "bottomleft") %>% 
+                position = "bottomleft") %>%
       # Layers control
       addLayersControl(
         baseGroups = c("Default", "Toner Lite", "Terrain"),
