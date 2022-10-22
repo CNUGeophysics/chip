@@ -3021,7 +3021,6 @@ output$abt <- renderUI({
   
   # Mapping ---------------------------------------------------------------------------
   
-  
   mapdata <- reactive({
     
     load("RData/OrgRData/age.RData")  
@@ -3086,14 +3085,19 @@ output$abt <- renderUI({
   observeEvent(req(input$mapmet, input$mapage),{
     
     if(nrow(mapdata()) == 0){
-      shinyalert(inputId = "map_alr", "No Information!",
-                 "Please, Select a different Method and Era", type = "info",
+      shinyalert(inputId = "map_alr", "No samples available!",
+                 "Please, Select different Method and Era", type = "info",
                  confirmButtonText = "OK")
-    }else if(nrow(mapdata()) != 0){
+    }else{
       observeEvent(input$mapping_zoom, {
+        # scaling for markers with zoom level
         new_zoom <- 7
         if(!is.null(input$mapping_zoom)) new_zoom <- input$mapping_zoom
-        
+        if (new_zoom < 5){
+          kradius <- 1 / new_zoom
+        }else{
+          kradius <- new_zoom * 0.4
+        }
         leafletProxy(
           mapId = "mapping",
           session = session
@@ -3101,9 +3105,9 @@ output$abt <- renderUI({
           addCircleMarkers(data = mapdata(),
                            lng = ~round(as.numeric(mapdata()$Longitude), 4),
                            lat = ~round(as.numeric(mapdata()$Latitude), 4),
-                           radius = 1.5,
-                           stroke = T,
-                           fillOpacity = 1.5,
+                           radius = kradius,
+                           stroke = F,
+                           fillOpacity = 1,
                            color = ~pal(mapdata()$material_num),
                            popup = ~paste("Sample: ", mapdata()$Sample, "<br/>",
                                           "Era: ", mapdata()$Era, "<br/>",
