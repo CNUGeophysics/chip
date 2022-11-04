@@ -101,7 +101,6 @@ output$abt <- renderUI({
   
   
   output$refmettbl <- DT::renderDataTable(
-    
     refmetdata(),
     rownames = F,
     
@@ -113,15 +112,14 @@ output$abt <- renderUI({
                                      list(width = '250px', targets = c(2)),
                                      list(width = '300px', targets = c(3:5)),
                                      list(visible = F, targets = c(0)))
-                   
     )
-    
   )
   
+  output$cntref_met_ref <- renderUI({
+    paste("Reference:", nrow(refmetdata()))
+  })
   
-  
-  
-  output$subrefmettbl <- renderDataTable({
+  subrefmetdata <- reactive({
     
     load("RData/OrgRData/spl.RData")  
     
@@ -145,19 +143,22 @@ output$abt <- renderUI({
     }
   })
   
+  output$subrefmettbl <- renderDataTable(
+    subrefmetdata(),
+    rownames = F,
+    selection = "single")
+  
+  output$cntref_met_spl <- renderUI({
+    paste("Sample:", nrow(subrefmetdata()))
+  })
   
   output$DBrefmet <- downloadHandler(
     
     filename = function(){
-      
       paste0("Reference_Method_Data.csv")    
-      
     },
-    
     content = function(file){
-      
       write.csv(refmetdata()[,-c(1)], file, row.names = F)
-      
     }
   )
   
@@ -191,26 +192,29 @@ output$abt <- renderUI({
     
     ref <- join(ref, age, by = "RefID")
     ref <- ref[ref$Era %in% input$refage, c(1:10)]    
-    
+
   })
   
   output$refagetbl <-renderDataTable(
     
     refagedata(),
     rownames = F,
+    selection = "single",
     
     options = list(scrollX = T,
                    autoWidth = T,
                    columnDefs = list(list(width = '500px', targets = c(1)),
                                      list(width = '250px', targets = c(2)),
                                      list(width = '300px', targets = c(3:5)),
-                                     list(visible = F, targets = c(0))
-                   )
-    ),
-    selection = "single"
-  )
+                                     list(visible = F, targets = c(0)))
+    ))
   
-  output$subrefagetbl <- renderDataTable({
+  output$cntref_age_ref <- renderUI({
+    paste("Reference:", nrow(refagedata()))
+  })
+  
+  
+  subrefagedata <- reactive({
     
     load("RData/OrgRData/spl.RData")  
     if(file.exists("RData/UserRData/spl_custom.RData")){
@@ -231,11 +235,17 @@ output$abt <- renderUI({
       spl$Latitude <- format(spl$Latitude, digits = 4, nsmall = 4)
       
       spl <- spl[spl$RefID %in% selected_sample, c(3:7)]
-      
-      DT::datatable(spl, selection = "single", 
-                    rownames = F)
-    }    
-    
+    } 
+  })
+  
+  output$subrefagetbl <- renderDataTable(
+    subrefagedata(),
+    rownames = F,
+    selection = "single"
+  )
+  
+  output$cntref_age_spl <- renderUI({
+    paste("Sample:", nrow(subrefagedata()))
   })
   
   output$DBrefage <- downloadHandler(
@@ -302,6 +312,10 @@ output$abt <- renderUI({
     selection = "single"    
     
   )
+  
+  output$cntiso_met_spl <- renderUI({
+    paste("Sample:", nrow(splmetdata()))
+  })
   
   
   subsplmetdata <- reactive({
@@ -1016,6 +1030,11 @@ output$abt <- renderUI({
     selection = "single"
   )
   
+  output$cntiso_met_iso <- renderUI({
+    paste("Isotope Data:", nrow(subsplmettbldata()))
+  })
+  
+  
   savesplmetvalue <- reactive({
     value[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
   })
@@ -1137,6 +1156,11 @@ output$abt <- renderUI({
     ),
     selection = "single"    
   )
+  
+  output$cntiso_age_spl <- renderUI({
+    paste("Sample:", nrow(chronodata()))
+  })
+  
   
   ## Sample age subtbl 2 ---------------------------------------------------------------
   
@@ -1882,6 +1906,10 @@ output$abt <- renderUI({
     rownames = F,
     selection = "single"
   )
+  
+  output$cntiso_age_iso <- renderUI({
+    paste("Isotope Data:", nrow(subagetbldata()))
+  })
   
   savesplagevalue <- reactive({
     value[[paste0(subagetbldata(), ".xlsx")]][-c(1)]
