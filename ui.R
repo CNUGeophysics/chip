@@ -96,7 +96,10 @@ ui <- fluidPage(
                   inputId = "refmet", label = "Method",
                   choices = as.vector(met_cd$Method),
                   selected = "Ar-Ar"),
-                downloadButton("DBrefmet", "Download")
+                downloadButton("DBrefmet", "Download"),
+                br(),
+                br(),
+                uiOutput("cntref_met_ref"), uiOutput("cntref_met_spl")
               ),
               mainPanel(
                 h3(HTML("<b>Reference Information</b>")),
@@ -113,7 +116,10 @@ ui <- fluidPage(
                   inputId = "refage", label = "Age",
                   choices = as.vector(unique(age$Era)),
                   selected = "Cenozoic"),
-                downloadButton("DBrefage", "Download")
+                downloadButton("DBrefage", "Download"),
+                br(),
+                br(),
+                uiOutput("cntref_age_ref"), uiOutput("cntref_age_spl")
               ),
               mainPanel(
                 h3(HTML("<b>Reference Information</b>")),
@@ -135,7 +141,10 @@ ui <- fluidPage(
                   selected = "Ar-Ar"),
                 downloadButton("DBsplmet", "Download Sample"),
                 br(), br(),
-                downloadButton("DBsplmetvalue", "Download Value")
+                downloadButton("DBsplmetvalue", "Download Value"),
+                br(),
+                br(),
+                uiOutput("cntiso_met_spl"), uiOutput("cntiso_met_iso")
               ),
               mainPanel(
                 h3(HTML("<b>Sample Information</b>")),
@@ -154,7 +163,10 @@ ui <- fluidPage(
                   selectInput("splepo", "Epoch", choices = NULL),
                   downloadButton("DBsplage", "Download Sample"),
                   br(), br(),
-                  downloadButton("DBsplagevalue", "Download Value")
+                  downloadButton("DBsplagevalue", "Download Value"),
+                  br(),
+                  br(),
+                  uiOutput("cntiso_age_spl"), uiOutput("cntiso_age_iso")
                 ),
                 mainPanel(
                   h3(HTML("<b>Sample Information</b>")),
