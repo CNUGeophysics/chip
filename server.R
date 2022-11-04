@@ -87,7 +87,7 @@ output$abt <- renderUI({
         age <- rbind(age, age_custom)
       }
     }
-    
+
     age <- join(age, met_cd, by = "Method_cd")
     age <- age[,c(1,3,11)]
     
@@ -121,7 +121,8 @@ output$abt <- renderUI({
   
   subrefmetdata <- reactive({
     
-    load("RData/OrgRData/spl.RData")  
+    load("RData/OrgRData/spl.RData") 
+    load("RData/OrgRData/metCode.RData")
     
     if(file.exists("RData/UserRData/spl_custom.RData")){
       load("RData/UserRData/spl_custom.RData")
@@ -134,23 +135,738 @@ output$abt <- renderUI({
     
     selected_row <- input$refmettbl_rows_selected
     selected_sample <- refmetdata()[as.integer(selected_row),]$RefID
-    
+
     if(length(selected_sample)){
       spl$Longitude <- format(spl$Longitude, digits = 4, nsmall = 4)
       spl$Latitude <- format(spl$Latitude, digits = 4, nsmall = 4)
       
-      spl <- spl[spl$RefID %in% selected_sample, c(3:7)]
+      spl <- spl %>% 
+        mutate(spl, Method = input$refmet)
+      
+      spl <- join(spl, met_cd, by = "Method")
+      
+      spl <- spl %>% 
+        mutate(spl, ID = paste0(spl$RefID, spl$Sample_seq, spl$Method_cd))
+      
+      spl <- spl[spl$RefID %in% selected_sample, ]
     }
+    
   })
   
   output$subrefmettbl <- renderDataTable(
     subrefmetdata(),
     rownames = F,
-    selection = "single")
+    selection = "single",
+    options = list(columnDefs = list(list(visible = F, targets = c(0,1,7:9))))
+    )
   
   output$cntref_met_spl <- renderUI({
     paste("Sample:", nrow(subrefmetdata()))
   })
+  
+  subrefmetval <- reactive({
+    sub_selected_row <- input$subrefmettbl_rows_selected
+    sub_selected_sample <- subrefmetdata()[as.integer(sub_selected_row),]$ID
+  })
+  
+  subrefmetvaldata <- reactive({
+
+    if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "001"){
+     
+       # method 001 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_ar.RData")
+      if(file.exists("RData/UserRData/value_ar_custom.RData")){
+        load("RData/UserRData/value_ar_custom.RData")
+        value_ar <- c(value_ar, value_ar_custom)
+      }
+      value_ar[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "002"){
+      
+      # method 002 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_cosmo.RData")
+      if(file.exists("RData/UserRData/value_cosmo_custom.RData")){
+        load("RData/UserRData/value_cosmo_custom.RData")
+        value_cosmo <- c(value_cosmo, value_cosmo_custom)
+      }
+      value_cosmo[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "003"){
+      
+      # method 003 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_kar.RData")
+      if(file.exists("RData/UserRData/value_kar_custom.RData")){
+        load("RData/UserRData/value_kar_custom.RData")
+        value_kar <- c(value_kar, value_kar_custom)
+      }
+      
+      df_temp<- as.data.frame(value_kar[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("Delta.Radiogenic.Ar40" %in% names(df_temp) == T){
+        df_temp$Delta.Radiogenic.Ar40 <- format(df_temp$Delta.Radiogenic.Ar40, scientific = F) 
+      }
+      
+      if("Radiogenic.Ar36" %in% names(df_temp) == T){
+        df_temp$Radiogenic.Ar36 <- format(df_temp$Radiogenic.Ar36, scientific = F)
+      }
+      
+      if("Delta.Radiogenic.Ar36" %in% names(df_temp) == T){
+        df_temp$Delta.Radiogenic.Ar36 <- format(df_temp$Delta.Radiogenic.Ar36, scientific = F)
+      }
+      
+      df <- df_temp
+      
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "004"){
+      
+      # method 004 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_luhf.RData")
+      if(file.exists("RData/UserRData/value_luhf_custom.RData")){
+        load("RData/UserRData/value_luhf_custom.RData")
+        value_luhf <- c(value_luhf, value_luhf_custom)
+      }
+      value_luhf[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "005"){
+      
+      # method 005 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_osl.RData")
+      if(file.exists("RData/UserRData/value_osl_custom.RData")){
+        load("RData/UserRData/value_osl_custom.RData")
+        value_osl <- c(value_osl, value_osl_custom)
+      }
+      value_osl[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "006"){
+      
+      # method 006 --------------------------------------------------------------
+      
+      load("RData/OrgRData/value_smnd.RData")
+      if(file.exists("RData/UserRData/value_smnd_custom.RData")){
+        load("RData/UserRData/value_smnd_custom.RData")
+        value_smnd <- c(value_smnd, value_smnd_custom)
+      }
+      value_smnd[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+    }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "007"){
+      
+      # method 007 --------------------------------------------------------------
+      load("RData/OrgRData/value_upb.RData")
+      if(file.exists("RData/UserRData/value_upb_custom.RData")){
+        load("RData/UserRData/value_upb_custom.RData")  
+        value_upb <- c(value_upb, value_upb_custom)
+      }
+      
+      df_temp<- as.data.frame(value_upb[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("U" %in% names(df_temp) ==T){
+        df_temp$U <- format(round(df_temp$U, digits = 0), nsmall = 0, scientific = F)
+      }
+      
+      if("Th" %in% names(df_temp) ==T){
+        df_temp$Th <- format(round(df_temp$Th, digits = 0), nsmall = 0, scientific = F)
+      }
+      
+      if("Th_U" %in% names(df_temp) ==T){
+        df_temp$Th_U <- format(round(df_temp$Th_U, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Th_U.Per" %in% names(df_temp) ==T){
+        df_temp$Th_U.Per <- format(round(df_temp$Th_U.Per, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Th_U.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Th_U.PM.Per <- format(round(df_temp$Th_U.PM.Per, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      ## pb series ---------------------------------------------------------------
+      
+      if("Pb" %in% names(df_temp) ==T){
+        df_temp$Pb <- format(round(df_temp$Pb, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Pb206" %in% names(df_temp) ==T){
+        df_temp$Pb206 <- format(round(df_temp$Pb206, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Pb206.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Pb206.PM.Per <- format(round(df_temp$Pb206.PM.Per, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Pbc" %in% names(df_temp) ==T){
+        df_temp$Pbc <- format(round(df_temp$Pbc, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      if("Pbr" %in% names(df_temp) ==T){
+        df_temp$Pbr <- format(round(df_temp$Pbr, digits = 2), nsmall = 2, scientific = F)
+      }
+      
+      
+      # Pb204 -------------------------------------------------------------------
+      
+      if("Pb204_Pb206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb204_Pb206)) >= 5){
+          df_temp$Pb204_Pb206 <- format(round(df_temp$Pb204_Pb206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb204_Pb206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb204_Pb206)))
+          df_temp$Pb204_Pb206 <- format(round(df_temp$Pb204_Pb206,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb204_Pb206.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb204_Pb206.PM)) >= 5){
+          df_temp$Pb204_Pb206.PM <- format(round(df_temp$Pb204_Pb206.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb204_Pb206.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb204_Pb206.PM)))
+          df_temp$Pb204_Pb206.PM <- format(round(df_temp$Pb204_Pb206.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb204_Pb206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb204_Pb206.PM.Per)) >= 5){
+          df_temp$Pb204_Pb206.PM.Per <- format(round(df_temp$Pb204_Pb206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb204_Pb206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb204_Pb206.PM.Per)))
+          df_temp$Pb204_Pb206.PM.Per <- format(round(df_temp$Pb204_Pb206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      # Pb206 -------------------------------------------------------------------
+      
+      if("Pb206_Th232" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_Th232)) >= 5){
+          df_temp$Pb206_Th232 <- format(round(df_temp$Pb206_Th232, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_Th232)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_Th232)))
+          df_temp$Pb206_Th232 <- format(round(df_temp$Pb206_Th232,  digits = num), nsmall = num)
+        }}
+      
+      
+      if("Pb206_Th232.SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_Th232.SD)) >= 5){
+          df_temp$Pb206_Th232.SD <- format(round(df_temp$Pb206_Th232.SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_Th232.SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_Th232.SD)))
+          df_temp$Pb206_Th232.SD <- format(round(df_temp$Pb206_Th232.SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238)) >= 5){
+          df_temp$Pb206_U238 <- format(round(df_temp$Pb206_U238, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238)))
+          df_temp$Pb206_U238 <- format(round(df_temp$Pb206_U238,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238.PM)) >= 5){
+          df_temp$Pb206_U238.PM <- format(round(df_temp$Pb206_U238.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238.PM)))
+          df_temp$Pb206_U238.PM <- format(round(df_temp$Pb206_U238.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238.PM.Per)) >= 5){
+          df_temp$Pb206_U238.PM.Per <- format(round(df_temp$Pb206_U238.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238.PM.Per)))
+          df_temp$Pb206_U238.PM.Per <- format(round(df_temp$Pb206_U238.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238.SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238.SD)) >= 5){
+          df_temp$Pb206_U238.SD <- format(round(df_temp$Pb206_U238.SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238.SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238.SD)))
+          df_temp$Pb206_U238.SD <- format(round(df_temp$Pb206_U238.SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238.2SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238.2SD)) >= 5){
+          df_temp$Pb206_U238.2SD <- format(round(df_temp$Pb206_U238.2SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238.2SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238.2SD)))
+          df_temp$Pb206_U238.2SD <- format(round(df_temp$Pb206_U238.2SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb206_U238.2SE" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb206_U238.2SE)) >= 5){
+          df_temp$Pb206_U238.2SE <- format(round(df_temp$Pb206_U238.2SE, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb206_U238.2SE)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb206_U238.2SE)))
+          df_temp$Pb206_U238.2SE <- format(round(df_temp$Pb206_U238.2SE,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr206_U238" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr206_U238)) >= 5){
+          df_temp$Pbr206_U238 <- format(round(df_temp$Pbr206_U238, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr206_U238)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr206_U238)))
+          df_temp$Pbr206_U238 <- format(round(df_temp$Pbr206_U238,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr206_U238.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr206_U238.PM)) >= 5){
+          df_temp$Pbr206_U238.PM <- format(round(df_temp$Pbr206_U238.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr206_U238.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr206_U238.PM)))
+          df_temp$Pbr206_U238.PM <- format(round(df_temp$Pbr206_U238.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr206_U238.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr206_U238.PM.Per)) >= 5){
+          df_temp$Pbr206_U238.PM.Per <- format(round(df_temp$Pbr206_U238.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr206_U238.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr206_U238.PM.Per)))
+          df_temp$Pbr206_U238.PM.Per <- format(round(df_temp$Pbr206_U238.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      # U238 --------------------------------------------------------------------
+      
+      if("U238_Pb206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pb206)) >= 5){
+          df_temp$U238_Pb206 <- format(round(df_temp$U238_Pb206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pb206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pb206)))
+          df_temp$U238_Pb206 <- format(round(df_temp$U238_Pb206,  digits = num), nsmall = num)
+        }}
+      
+      
+      if("U238_Pb206.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pb206.Per)) >= 5){
+          df_temp$U238_Pb206.Per <- format(round(df_temp$U238_Pb206.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pb206.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pb206.Per)))
+          df_temp$U238_Pb206.Per <- format(round(df_temp$U238_Pb206.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("U238_Pb206.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pb206.PM)) >= 5){
+          df_temp$U238_Pb206.PM <- format(round(df_temp$U238_Pb206.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pb206.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pb206.PM)))
+          df_temp$U238_Pb206.PM <- format(round(df_temp$U238_Pb206.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("U238_Pb206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pb206.PM.Per)) >= 5){
+          df_temp$U238_Pb206.PM.Per <- format(round(df_temp$U238_Pb206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pb206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pb206.PM.Per)))
+          df_temp$U238_Pb206.PM.Per <- format(round(df_temp$U238_Pb206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("U238_Pb206.SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pb206.SD)) >= 5){
+          df_temp$U238_Pb206.SD <- format(round(df_temp$U238_Pb206.SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pb206.SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pb206.SD)))
+          df_temp$U238_Pb206.SD <- format(round(df_temp$U238_Pb206.SD,  digits = num), nsmall = num)
+        }}
+      
+      if("U238_Pbr206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pbr206)) >= 5){
+          df_temp$U238_Pbr206 <- format(round(df_temp$U238_Pbr206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pbr206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pbr206)))
+          df_temp$U238_Pbr206 <- format(round(df_temp$U238_Pbr206,  digits = num), nsmall = num)
+        }}
+      
+      
+      if("U238_Pbr206.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pbr206.PM)) >= 5){
+          df_temp$U238_Pbr206.PM <- format(round(df_temp$U238_Pbr206.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pbr206.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pbr206.PM)))
+          df_temp$U238_Pbr206.PM <- format(round(df_temp$U238_Pbr206.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("U238_Pbr206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$U238_Pbr206.PM.Per)) >= 5){
+          df_temp$U238_Pbr206.PM.Per <- format(round(df_temp$U238_Pbr206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$U238_Pbr206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$U238_Pbr206.PM.Per)))
+          df_temp$U238_Pbr206.PM.Per <- format(round(df_temp$U238_Pbr206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      # Pb207 -------------------------------------------------------------------
+      
+      if("Pb207_Pb206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206)) >= 5){
+          df_temp$Pb207_Pb206 <- format(round(df_temp$Pb207_Pb206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206)))
+          df_temp$Pb207_Pb206 <- format(round(df_temp$Pb207_Pb206,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.Per)) >= 5){
+          df_temp$Pb207_Pb206.Per <- format(round(df_temp$Pb207_Pb206.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.Per)))
+          df_temp$Pb207_Pb206.Per <- format(round(df_temp$Pb207_Pb206.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.PM)) >= 5){
+          df_temp$Pb207_Pb206.PM <- format(round(df_temp$Pb207_Pb206.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.PM)))
+          df_temp$Pb207_Pb206.PM <- format(round(df_temp$Pb207_Pb206.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.PM.Per)) >= 5){
+          df_temp$Pb207_Pb206.PM.Per <- format(round(df_temp$Pb207_Pb206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.PM.Per)))
+          df_temp$Pb207_Pb206.PM.Per <- format(round(df_temp$Pb207_Pb206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.SD)) >= 5){
+          df_temp$Pb207_Pb206.SD <- format(round(df_temp$Pb207_Pb206.SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.SD)))
+          df_temp$Pb207_Pb206.SD <- format(round(df_temp$Pb207_Pb206.SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.2SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.2SD)) >= 5){
+          df_temp$Pb207_Pb206.2SD <- format(round(df_temp$Pb207_Pb206.2SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.2SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.2SD)))
+          df_temp$Pb207_Pb206.2SD <- format(round(df_temp$Pb207_Pb206.2SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_Pb206.2SE" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_Pb206.2SE)) >= 5){
+          df_temp$Pb207_Pb206.2SE <- format(round(df_temp$Pb207_Pb206.2SE, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_Pb206.2SE)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_Pb206.2SE)))
+          df_temp$Pb207_Pb206.2SE <- format(round(df_temp$Pb207_Pb206.2SE,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_Pb206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_Pb206)) >= 5){
+          df_temp$Pbr207_Pb206 <- format(round(df_temp$Pbr207_Pb206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_Pb206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_Pb206)))
+          df_temp$Pbr207_Pb206 <- format(round(df_temp$Pbr207_Pb206,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_Pb206.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_Pb206.PM)) >= 5){
+          df_temp$Pbr207_Pb206.PM <- format(round(df_temp$Pbr207_Pb206.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_Pb206.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_Pb206.PM)))
+          df_temp$Pbr207_Pb206.PM <- format(round(df_temp$Pbr207_Pb206.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_Pb206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_Pb206.PM.Per)) >= 5){
+          df_temp$Pbr207_Pb206.PM.Per <- format(round(df_temp$Pbr207_Pb206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_Pb206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_Pb206.PM.Per)))
+          df_temp$Pbr207_Pb206.PM.Per <- format(round(df_temp$Pbr207_Pb206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_Pbr206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_Pbr206)) >= 5){
+          df_temp$Pbr207_Pbr206 <- format(round(df_temp$Pbr207_Pbr206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_Pbr206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_Pbr206)))
+          df_temp$Pbr207_Pbr206 <- format(round(df_temp$Pbr207_Pbr206,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_Pbr206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_Pbr206.PM.Per)) >= 5){
+          df_temp$Pbr207_Pbr206.PM.Per <- format(round(df_temp$Pbr207_Pbr206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_Pbr206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_Pbr206.PM.Per)))
+          df_temp$Pbr207_Pbr206.PM.Per <- format(round(df_temp$Pbr207_Pbr206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_U235" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_U235)) >= 5){
+          df_temp$Pb207_U235 <- format(round(df_temp$Pb207_U235, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_U235)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_U235)))
+          df_temp$Pb207_U235 <- format(round(df_temp$Pb207_U235,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_U235.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_U235.PM.Per)) >= 5){
+          df_temp$Pb207_U235.PM.Per <- format(round(df_temp$Pb207_U235.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_U235.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_U235.PM.Per)))
+          df_temp$Pb207_U235.PM.Per <- format(round(df_temp$Pb207_U235.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_U235.SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_U235.SD)) >= 5){
+          df_temp$Pb207_U235.SD <- format(round(df_temp$Pb207_U235.SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_U235.SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_U235.SD)))
+          df_temp$Pb207_U235.SD <- format(round(df_temp$Pb207_U235.SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_U235.2SD" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_U235.2SD)) >= 5){
+          df_temp$Pb207_U235.2SD <- format(round(df_temp$Pb207_U235.2SD, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_U235.2SD)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_U235.2SD)))
+          df_temp$Pb207_U235.2SD <- format(round(df_temp$Pb207_U235.2SD,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb207_U235.2SE" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb207_U235.2SE)) >= 5){
+          df_temp$Pb207_U235.2SE <- format(round(df_temp$Pb207_U235.2SE, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb207_U235.2SE)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb207_U235.2SE)))
+          df_temp$Pb207_U235.2SE <- format(round(df_temp$Pb207_U235.2SE,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_U235" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_U235)) >= 5){
+          df_temp$Pbr207_U235 <- format(round(df_temp$Pbr207_U235, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_U235)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_U235)))
+          df_temp$Pbr207_U235 <- format(round(df_temp$Pbr207_U235,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_U235.PM" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_U235.PM)) >= 5){
+          df_temp$Pbr207_U235.PM <- format(round(df_temp$Pbr207_U235.PM, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_U235.PM)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_U235.PM)))
+          df_temp$Pbr207_U235.PM <- format(round(df_temp$Pbr207_U235.PM,  digits = num), nsmall = num)
+        }}
+      
+      if("Pbr207_U235.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pbr207_U235.PM.Per)) >= 5){
+          df_temp$Pbr207_U235.PM.Per <- format(round(df_temp$Pbr207_U235.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pbr207_U235.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pbr207_U235.PM.Per)))
+          df_temp$Pbr207_U235.PM.Per <- format(round(df_temp$Pbr207_U235.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      # Pb208 -------------------------------------------------------------------
+      
+      if("Pb208_Pb206" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb208_Pb206)) >= 5){
+          df_temp$Pb208_Pb206 <- format(round(df_temp$Pb208_Pb206, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb208_Pb206)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb208_Pb206)))
+          df_temp$Pb208_Pb206 <- format(round(df_temp$Pb208_Pb206,  digits = num), nsmall = num)
+        }}
+      
+      if("Pb208_Pb206.PM.Per" %in% names(df_temp) ==T){
+        if(decimal(data.frame(df_temp$Pb208_Pb206.PM.Per)) >= 5){
+          df_temp$Pb208_Pb206.PM.Per <- format(round(df_temp$Pb208_Pb206.PM.Per, digits = 5), nsmall = 5)
+        }else if(decimal(data.frame(df_temp$Pb208_Pb206.PM.Per)) < 5){
+          num <- as.numeric(decimal(data.frame(df_temp$Pb208_Pb206.PM.Per)))
+          df_temp$Pb208_Pb206.PM.Per <- format(round(df_temp$Pb208_Pb206.PM.Per,  digits = num), nsmall = num)
+        }}
+      
+      # Pb206.Age ---------------------------------------------------------------
+      
+      if("Pb206_U238.Age" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age <- df_temp$Pb206_U238.Age*0.000001 
+        df_temp$Pb206_U238.Age <- format(round(df_temp$Pb206_U238.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age"] = "Pb206_U238.Age(Ma)"
+      }
+      
+      if("Pb206_U238.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age.PM <- df_temp$Pb206_U238.Age.PM*0.000001 
+        df_temp$Pb206_U238.Age.PM <- format(round(df_temp$Pb206_U238.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age.PM"] = "Pb206_U238.Age.PM(Ma)"
+      }
+      
+      if("Pb206_U238.Age.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age.PM.Per <- df_temp$Pb206_U238.Age.PM.Per*0.000001 
+        df_temp$Pb206_U238.Age.PM.Per <- format(round(df_temp$Pb206_U238.Age.PM.Per, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age.PM.Per"] = "Pb206_U238.Age.PM.Per(Ma)"
+      }
+      
+      if("Pb206_U238.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age.SD <- df_temp$Pb206_U238.Age.SD*0.000001 
+        df_temp$Pb206_U238.Age.SD <- format(round(df_temp$Pb206_U238.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age.SD"] = "Pb206_U238.Age.SD(Ma)"
+      }
+      
+      if("Pb206_U238.Age.2SD" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age.2SD <- df_temp$Pb206_U238.Age.2SD*0.000001 
+        df_temp$Pb206_U238.Age.2SD <- format(round(df_temp$Pb206_U238.Age.2SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age.2SD"] = "Pb206_U238.Age.2SD(Ma)"
+      }
+      
+      if("Pb206_U238.Age.2SE" %in% names(df_temp) ==T){
+        df_temp$Pb206_U238.Age.2SE <- df_temp$Pb206_U238.Age.2SE*0.000001 
+        df_temp$Pb206_U238.Age.2SE <- format(round(df_temp$Pb206_U238.Age.2SE, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb206_U238.Age.2SE"] = "Pb206_U238.Age.2SE(Ma)"
+      }
+      
+      if("Pbr206_U238.Age" %in% names(df_temp) ==T){
+        df_temp$Pbr206_U238.Age <- df_temp$Pbr206_U238.Age*0.000001 
+        df_temp$Pbr206_U238.Age <- format(round(df_temp$Pbr206_U238.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr206_U238.Age"] = "Pbr206_U238.Age(Ma)"
+      }
+      
+      if("Pbr206_U238.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pbr206_U238.Age.PM <- df_temp$Pbr206_U238.Age.PM*0.000001 
+        df_temp$Pbr206_U238.Age.PM <- format(round(df_temp$Pbr206_U238.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr206_U238.Age.PM"] = "Pbr206_U238.Age.PM(Ma)"
+      }
+      
+      if("Pbr206_U238.Age.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Pbr206_U238.Age.PM.Per <- df_temp$Pbr206_U238.Age.PM.Per*0.000001 
+        df_temp$Pbr206_U238.Age.PM.Per <- format(round(df_temp$Pbr206_U238.Age.PM.Per, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr206_U238.Age.PM.Per"] = "Pbr206_U238.Age.PM.Per(Ma)"
+      }
+      
+      # U238 Age--------------------------------------------------------------------
+      
+      if("U238_Pb206.Age" %in% names(df_temp) ==T){
+        df_temp$U238_Pb206.Age <- df_temp$U238_Pb206.Age*0.000001 
+        df_temp$U238_Pb206.Age <- format(round(df_temp$U238_Pb206.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "U238_Pb206.Age"] = "U238_Pb206.Age(Ma)"
+      }
+      
+      if("U238_Pb206.Age.PM.Per" %in% names(df_temp) ==T){
+        df_temp$U238_Pb206.Age.PM.Per <- df_temp$U238_Pb206.Age.PM.Per*0.000001 
+        df_temp$U238_Pb206.Age.PM.Per <- format(round(df_temp$U238_Pb206.Age.PM.Per, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "U238_Pb206.Age.PM.Per"] = "U238_Pb206.Age.PM.Per(Ma)"
+      }
+      
+      # Pb207 Age ---------------------------------------------------------------
+      
+      if("Pb207_Pb206.Age" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age <- df_temp$Pb207_Pb206.Age*0.000001 
+        df_temp$Pb207_Pb206.Age <- format(round(df_temp$Pb207_Pb206.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age"] = "Pb207_Pb206.Age(Ma)"
+      }
+      
+      if("Pb207_Pb206.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age.PM <- df_temp$Pb207_Pb206.Age.PM*0.000001 
+        df_temp$Pb207_Pb206.Age.PM <- format(round(df_temp$Pb207_Pb206.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age.PM"] = "Pb207_Pb206.Age.PM(Ma)"
+      }
+      
+      if("Pb207_Pb206.Age.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age.PM.Per <- df_temp$Pb207_Pb206.Age.PM.Per*0.000001 
+        df_temp$Pb207_Pb206.Age.PM.Per <- format(round(df_temp$Pb207_Pb206.Age.PM.Per, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age.PM.Per"] = "Pb207_Pb206.Age.PM.Per(Ma)"
+      }
+      
+      if("Pb207_Pb206.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age.SD <- df_temp$Pb207_Pb206.Age.SD*0.000001 
+        df_temp$Pb207_Pb206.Age.SD <- format(round(df_temp$Pb207_Pb206.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age.SD"] = "Pb207_Pb206.Age.SD(Ma)"
+      }
+      
+      if("Pb207_Pb206.Age.2SD" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age.2SD <- df_temp$Pb207_Pb206.Age.2SD*0.000001 
+        df_temp$Pb207_Pb206.Age.2SD <- format(round(df_temp$Pb207_Pb206.Age.2SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age.2SD"] = "Pb207_Pb206.Age.2SD(Ma)"
+      }
+      
+      if("Pb207_Pb206.Age.2SE" %in% names(df_temp) ==T){
+        df_temp$Pb207_Pb206.Age.2SE <- df_temp$Pb207_Pb206.Age.2SE*0.000001 
+        df_temp$Pb207_Pb206.Age.2SE <- format(round(df_temp$Pb207_Pb206.Age.2SE, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_Pb206.Age.2SE"] = "Pb207_Pb206.Age.2SE(Ma)"
+      }
+      
+      if("Pbr207_Pbr206.Age" %in% names(df_temp) ==T){
+        df_temp$Pbr207_Pbr206.Age <- df_temp$Pbr207_Pbr206.Age*0.000001 
+        df_temp$Pbr207_Pbr206.Age <- format(round(df_temp$Pbr207_Pbr206.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr207_Pbr206.Age"] = "Pbr207_Pbr206.Age(Ma)"
+      }
+      
+      if("Pbr207_Pbr206.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pbr207_Pbr206.Age.PM <- df_temp$Pbr207_Pbr206.Age.PM*0.000001 
+        df_temp$Pbr207_Pbr206.Age.PM <- format(round(df_temp$Pbr207_Pbr206.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr207_Pbr206.Age.PM"] = "Pbr207_Pbr206.Age.PM(Ma)"
+      }
+      
+      if("Pbr207_Pbr206.Age.PM.Per" %in% names(df_temp) ==T){
+        df_temp$Pbr207_Pbr206.Age.PM.Per <- df_temp$Pbr207_Pbr206.Age.PM.Per*0.000001 
+        df_temp$Pbr207_Pbr206.Age.PM.Per <- format(round(df_temp$Pbr207_Pbr206.Age.PM.Per, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pbr207_Pbr206.Age.PM.Per"] = "Pbr207_Pbr206.Age.PM.Per(Ma)"
+      }
+      
+      if("Pb207_U235.Age" %in% names(df_temp) ==T){
+        df_temp$Pb207_U235.Age <- df_temp$Pb207_U235.Age*0.000001 
+        df_temp$Pb207_U235.Age <- format(round(df_temp$Pb207_U235.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_U235.Age"] = "Pb207_U235.Age(Ma)"
+      }
+      
+      if("Pb207_U235.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pb207_U235.Age.PM <- df_temp$Pb207_U235.Age.PM*0.000001 
+        df_temp$Pb207_U235.Age.PM <- format(round(df_temp$Pb207_U235.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_U235.Age.PM"] = "Pb207_U235.Age.PM(Ma)"
+      }
+      
+      if("Pb207_U235.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Pb207_U235.Age.SD <- df_temp$Pb207_U235.Age.SD*0.000001 
+        df_temp$Pb207_U235.Age.SD <- format(round(df_temp$Pb207_U235.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_U235.Age.SD"] = "Pb207_U235.Age.SD(Ma)"
+      }
+      
+      if("Pb207_U235.Age.2SD" %in% names(df_temp) ==T){
+        df_temp$Pb207_U235.Age.2SD <- df_temp$Pb207_U235.Age.2SD*0.000001 
+        df_temp$Pb207_U235.Age.2SD <- format(round(df_temp$Pb207_U235.Age.2SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_U235.Age.2SD"] = "Pb207_U235.Age.2SD(Ma)"
+      }
+      
+      if("Pb207_U235.Age.2SE" %in% names(df_temp) ==T){
+        df_temp$Pb207_U235.Age.2SE <- df_temp$Pb207_U235.Age.2SE*0.000001 
+        df_temp$Pb207_U235.Age.2SE <- format(round(df_temp$Pb207_U235.Age.2SE, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb207_U235.Age.2SE"] = "Pb207_U235.Age.2SE(Ma)"
+      }
+      
+      # Pb208_Age ---------------------------------------------------------------
+      
+      if("Pb208_Th232.Age" %in% names(df_temp) ==T){
+        df_temp$Pb208_Th232.Age <- df_temp$Pb208_Th232.Age*0.000001 
+        df_temp$Pb208_Th232.Age <- format(round(df_temp$Pb208_Th232.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb208_Th232.Age"] = "Pb208_Th232.Age(Ma)"
+      }
+      
+      if("Pb208_Th232.Age.PM" %in% names(df_temp) ==T){
+        df_temp$Pb208_Th232.Age.PM <- df_temp$Pb208_Th232.Age.PM*0.000001 
+        df_temp$Pb208_Th232.Age.PM <- format(round(df_temp$Pb208_Th232.Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Pb208_Th232.Age.PM"] = "Pb208_Th232.Age.PM(Ma)"
+      }
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001 
+        df_temp$Age <- format(round(df_temp$Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.000001 
+        df_temp$Age.PM <- format(round(df_temp$Age.PM, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ma)"
+      }
+      
+      
+      if("Disc" %in% names(df_temp) == T){
+        df_temp$Disc <- format(round(df_temp$Disc, digits = 0), nsmall = 0)
+      }
+      
+      df <- df_temp
+      
+    }
+    
+  })
+  
+  output$subrefmetvaltbl <- renderDataTable(
+    subrefmetvaldata(),
+    rownames = F,
+    selection = "single")
   
   output$DBrefmet <- downloadHandler(
     
@@ -285,7 +1001,7 @@ output$abt <- renderUI({
     }
     
     age <- age %>% 
-      mutate(ag, ID = paste0(age$RefID, age$Sample_seq, age$Method_cd))
+      mutate(age, ID = paste0(age$RefID, age$Sample_seq, age$Method_cd))
     
     age <- age[,c(1,2,3,4,11)]
     age <- data.table(unique(age))
@@ -302,22 +1018,19 @@ output$abt <- renderUI({
     
   })
   
-  
-  output$splmettbl <- renderDataTable(
+    output$splmettbl <- renderDataTable(
+      splmetdata(),
+      rownames = F,
+      options = list(scrollX = T,
+                     columnDefs = list(list(visible = F, targets = c(0)))),
+      selection = "single" 
+    )
     
-    splmetdata(),
-    rownames = F,
-    options = list(scrollX = T,
-                   columnDefs = list(list(visible = F, targets = c(0)))),
-    selection = "single"    
-    
-  )
+    output$cntiso_met_spl <- renderUI({
+      paste("Sample:", nrow(splmetdata()))
+    })
   
-  output$cntiso_met_spl <- renderUI({
-    paste("Sample:", nrow(splmetdata()))
-  })
-  
-  
+
   subsplmetdata <- reactive({
     
     selected_row <- input$splmettbl_rows_selected
@@ -328,7 +1041,7 @@ output$abt <- renderUI({
   
   ### Sample Method Value Option ---------------------------------------------------------------------------
   
-  subsplmettbldata <- reactive(   
+  subsplmettbldata <- reactive({
     
     if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "001"){
       
@@ -1020,9 +1733,9 @@ output$abt <- renderUI({
       
       df <- df_temp
       
+    }
+    
     })
-  
-  
   
   output$subsplmettbl <- renderDataTable(
     subsplmettbldata(),
@@ -1033,7 +1746,6 @@ output$abt <- renderUI({
   output$cntiso_met_iso <- renderUI({
     paste("Isotope Data:", nrow(subsplmettbldata()))
   })
-  
   
   savesplmetvalue <- reactive({
     value[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
@@ -1160,7 +1872,7 @@ output$abt <- renderUI({
   output$cntiso_age_spl <- renderUI({
     paste("Sample:", nrow(chronodata()))
   })
-  
+
   
   ## Sample age subtbl 2 ---------------------------------------------------------------
   
@@ -1190,6 +1902,8 @@ output$abt <- renderUI({
   ### Sample Age Value Option ----------------------------------------------------------------
   
   subagetbldata <- reactive({
+    
+   
     
     if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "001"){
       
@@ -1895,13 +2609,11 @@ output$abt <- renderUI({
       if("Disc" %in% names(df_temp) == T){
         df_temp$Disc <- format(round(df_temp$Disc, digits = 0), nsmall = 0)
       }
-      
       df <- df_temp
     }
   })
   
   output$subsplagetbl <- renderDataTable(
-    
     subagetbldata(),
     rownames = F,
     selection = "single"
@@ -1910,7 +2622,7 @@ output$abt <- renderUI({
   output$cntiso_age_iso <- renderUI({
     paste("Isotope Data:", nrow(subagetbldata()))
   })
-  
+
   savesplagevalue <- reactive({
     value[[paste0(subagetbldata(), ".xlsx")]][-c(1)]
   })
