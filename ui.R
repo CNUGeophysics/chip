@@ -105,7 +105,10 @@ ui <- fluidPage(
                 h3(HTML("<b>Reference Information</b>")),
                 DTOutput("refmettbl"),
                 h3(HTML("<b>Sample Information</b>")),
-                DTOutput("subrefmettbl")
+                DTOutput("subrefmettbl"),
+                h3(HTML("<b>Isotope Data</b>")),
+                DTOutput("subrefmetvaltbl")
+                
               )
             )
         ),
@@ -171,7 +174,7 @@ ui <- fluidPage(
                 mainPanel(
                   h3(HTML("<b>Sample Information</b>")),
                   DTOutput("splagetbl"), br(), br(),
-                  h3(HTML("<b>Analysis Value</b>")),
+                  h3(HTML("<b>Isotope Value</b>")),
                   DTOutput("subsplagetbl")
                 )
               )
