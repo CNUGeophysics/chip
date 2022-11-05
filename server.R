@@ -3397,6 +3397,52 @@ output$abt <- renderUI({
     paste("Isotope Data:", nrow(subagetbldata()))
   })
 
+  
+  
+  subsplagerefdata <- reactive({
+    
+    refid <- as.character(substr(subagedata(), 1, 9))
+    
+    load("RData/OrgRData/ref.RData") 
+    
+    if(file.exists("RData/UserRData/ref_custom.RData")){
+      load("RData/UserRData/ref_custom.RData")
+      if(nrow(ref_custom) == 0){
+        ref
+      }else if(nrow(ref_custom) != 0){
+        ref <- rbind(ref, ref_custom)
+      }
+    }
+    
+    if(length(subagedata())){
+      ref <- ref[ref$RefID %in% refid,]
+    }
+  })
+  
+  output$subsplagereftbl <- renderDataTable(
+    subsplagerefdata(),
+    rownames = F,
+    selection = "single",
+    options = list(columnDefs = list(list(width = '500px', targets = c(1)),
+                                     list(width = '250px', targets = c(2)),
+                                     list(width = '300px', targets = c(3:5)),
+                                     list(visible = F, targets = c(0))))
+  )
+  
+  output$cntiso_age_ref <- renderUI({
+    if(length(subsplagerefdata())){
+      paste("Reference:", nrow(subsplagerefdata()))  
+    }
+  })
+  
+  
+  
+  
+  
+  
+  
+  
+  
   savesplagevalue <- reactive({
     value[[paste0(subagetbldata(), ".xlsx")]][-c(1)]
   })
