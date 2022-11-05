@@ -186,13 +186,18 @@ ui <- fluidPage(
                   downloadButton("DBsplagevalue", "Download Value"),
                   br(),
                   br(),
-                  uiOutput("cntiso_age_spl"), uiOutput("cntiso_age_iso")
+                  uiOutput("cntiso_age_spl"), uiOutput("cntiso_age_iso"), uiOutput("cntiso_age_ref")
                 ),
                 mainPanel(
                   h3(HTML("<b>Sample Information</b>")),
-                  DTOutput("splagetbl"), br(), br(),
+                  DTOutput("splagetbl"), br(), 
                   h3(HTML("<b>Isotope Value</b>")),
-                  DTOutput("subsplagetbl")
+                  br(),
+                  DTOutput("subsplagetbl"),
+                  br(),
+                  h3(HTML("<b>Reference Information</b>")),
+                  br(),
+                  DTOutput("subsplagereftbl")
                 )
               )
             )
