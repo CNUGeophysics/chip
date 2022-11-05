@@ -99,17 +99,20 @@ ui <- fluidPage(
                 downloadButton("DBrefmet", "Download"),
                 br(),
                 br(),
-                uiOutput("cntref_met_ref"), uiOutput("cntref_met_spl")
+                uiOutput("cntref_met_ref"), uiOutput("cntref_met_spl"), uiOutput("cntref_met_iso")
               ),
               mainPanel(
-                h3(HTML("<b>Reference Information</b>")),
+                h3(HTML("<b>❏ Reference Information</b>")),
+                br(),
                 DTOutput("refmettbl"),
-                h3(HTML("<b>Sample Information</b>")),
+                br(),
+                h3(HTML("<b>❏ Sample Information</b>")),
+                br(),
                 DTOutput("subrefmettbl"),
-                h3(HTML("<b>Isotope Data</b>")),
-                DTOutput("subrefmetvaltbl")
-                
-              )
+                br(),
+                h3(HTML("<b>❏ Isotope Data</b>")),
+                br(),
+                DTOutput("subrefmetvaltbl"))
             )
         ),
         tabPanel("Geological Age",
@@ -122,13 +125,20 @@ ui <- fluidPage(
                 downloadButton("DBrefage", "Download"),
                 br(),
                 br(),
-                uiOutput("cntref_age_ref"), uiOutput("cntref_age_spl")
+                uiOutput("cntref_age_ref"), uiOutput("cntref_age_spl"), uiOutput("cntref_age_iso")
               ),
               mainPanel(
-                h3(HTML("<b>Reference Information</b>")),
+                h3(HTML("<b>❏ Reference Information</b>")), 
+                br(),
                 DTOutput("refagetbl"),
-                h3(HTML("<b>Sample Information</b>")),
-                DTOutput("subrefagetbl")
+                br(),
+                h3(HTML("<b>❏ Sample Information</b>")),
+                br(),
+                DTOutput("subrefagetbl"),
+                br(),
+                h3(HTML("<b>❏ Isotope Data</b>")),
+                br(),
+                DTOutput("subrefagevaltbl")
               )
             )
         ),
