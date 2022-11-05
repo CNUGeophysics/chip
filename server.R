@@ -162,7 +162,9 @@ output$abt <- renderUI({
     )
   
   output$cntref_met_spl <- renderUI({
-    paste("Sample:", nrow(subrefmetdata()))
+    if(length(subrefmetdata())){
+      paste("Sample:", nrow(subrefmetdata()))  
+    }
   })
   
   subrefmetval <- reactive({
@@ -870,7 +872,7 @@ output$abt <- renderUI({
     selection = "single")
   
   output$cntref_met_iso <- renderUI({
-    paste("Isotope Data:", nrow(subrefmetvaldata()))
+      paste("Isotope Data:", nrow(subrefmetvaldata()))  
   })
   
   output$DBrefmet <- downloadHandler(
@@ -981,7 +983,9 @@ output$abt <- renderUI({
   )
   
   output$cntref_age_spl <- renderUI({
-    paste("Sample:", nrow(subrefagedata()))
+    if(length(subrefagedata())){
+      paste("Sample:", nrow(subrefagedata()))  
+    }
   })
   
   subrefageval <- reactive({
@@ -1692,9 +1696,8 @@ output$abt <- renderUI({
     selection = "single")
   
   output$cntref_age_iso <- renderUI({
-    paste("Isotope Data:", nrow(subrefagevaldata()))
+      paste("Isotope Data:", nrow(subrefagevaldata()))  
   })
-  
   
   
   output$DBrefage <- downloadHandler(
@@ -1709,7 +1712,7 @@ output$abt <- renderUI({
     
   )
   
-  # Sample -----------------------------------------------------------------------------
+  # Isotope Data ------------------------------------------------------------------
   
   ## Sample Method ----------------------------------------------------------------------
   
@@ -2477,7 +2480,46 @@ output$abt <- renderUI({
   )
   
   output$cntiso_met_iso <- renderUI({
-    paste("Isotope Data:", nrow(subsplmettbldata()))
+    if(length(subsplmettbldata())){
+      paste("Isotope Data:", nrow(subsplmettbldata()))  
+    }
+  })
+  
+  
+  subsplmetrefdata <- reactive({
+
+    refid <- as.character(substr(subsplmetdata(), 1, 9))
+  
+    load("RData/OrgRData/ref.RData") 
+    
+    if(file.exists("RData/UserRData/ref_custom.RData")){
+      load("RData/UserRData/ref_custom.RData")
+      if(nrow(ref_custom) == 0){
+        ref
+      }else if(nrow(ref_custom) != 0){
+        ref <- rbind(ref, ref_custom)
+      }
+    }
+    
+    if(length(subsplmetdata())){
+      ref <- ref[ref$RefID %in% refid,]
+    }
+  })
+  
+  output$subsplmetreftbl <- renderDataTable(
+    subsplmetrefdata(),
+    rownames = F,
+    selection = "single",
+    options = list(columnDefs = list(list(width = '500px', targets = c(1)),
+                                     list(width = '250px', targets = c(2)),
+                                     list(width = '300px', targets = c(3:5)),
+                                     list(visible = F, targets = c(0))))
+  )
+  
+  output$cntiso_met_ref <- renderUI({
+    if(length(subsplmetrefdata())){
+      paste("Reference:", nrow(subsplmetrefdata()))  
+    }
   })
   
   savesplmetvalue <- reactive({
@@ -2499,6 +2541,7 @@ output$abt <- renderUI({
       write.csv(savesplmetvalue(), file, row.names = F)
     })
   
+
   ## Sample Age ------------------------------------------------------------------------   
   
   ## chrono() ------------------------------------------------------------------------   
@@ -2635,8 +2678,6 @@ output$abt <- renderUI({
   ### Sample Age Value Option ----------------------------------------------------------------
   
   subagetbldata <- reactive({
-    
-   
     
     if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "001"){
       
