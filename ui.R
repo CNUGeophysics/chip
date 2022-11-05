@@ -157,13 +157,20 @@ ui <- fluidPage(
                 downloadButton("DBsplmetvalue", "Download Value"),
                 br(),
                 br(),
-                uiOutput("cntiso_met_spl"), uiOutput("cntiso_met_iso")
+                uiOutput("cntiso_met_spl"), uiOutput("cntiso_met_iso"), uiOutput("cntiso_met_ref")
               ),
               mainPanel(
-                h3(HTML("<b>Sample Information</b>")),
+                h3(HTML("<b>❏ Sample Information</b>")),
+                br(),
                 DTOutput("splmettbl"),
-                h3(HTML("<b>Isotope Data</b>")),
-                DTOutput("subsplmettbl")
+                br(),
+                h3(HTML("<b>❏ Isotope Data</b>")),
+                br(),
+                DTOutput("subsplmettbl"),
+                br(),
+                h3(HTML("<b>❏ Reference Information</b>")),
+                br(),
+                DTOutput("subsplmetreftbl")
               )
             )
           ),
