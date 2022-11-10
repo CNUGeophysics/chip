@@ -189,13 +189,13 @@ ui <- fluidPage(
                   uiOutput("cntiso_age_spl"), uiOutput("cntiso_age_iso"), uiOutput("cntiso_age_ref")
                 ),
                 mainPanel(
-                  h3(HTML("<b>Sample Information</b>")),
+                  h3(HTML("<b>❏ Sample Information</b>")),
                   DTOutput("splagetbl"), br(), 
-                  h3(HTML("<b>Isotope Value</b>")),
+                  h3(HTML("<b>❏ Isotope Value</b>")),
                   br(),
                   DTOutput("subsplagetbl"),
                   br(),
-                  h3(HTML("<b>Reference Information</b>")),
+                  h3(HTML("<b>❏ Reference Information</b>")),
                   br(),
                   DTOutput("subsplagereftbl")
                 )
@@ -215,8 +215,25 @@ ui <- fluidPage(
               selectInput(
                 inputId = "mapage",label = "Era: ",
                 choices = c("ALL", as.vector(unique(age$Era))),
-                selected = "ALL")),
-            mainPanel(leafletOutput("mapping", height = 600))
+                selected = "ALL"),
+              br(),
+              br(),
+              uiOutput("cntmap_spl"), uiOutput("cntmap_iso"), uiOutput("cntmap_ref")
+              ),
+            mainPanel(
+              leafletOutput("mapping", height = 600), 
+              br(),
+              h3(HTML("<b>❏ Sample Information</b>")),
+              br(),
+              DTOutput("mapspltbl"), 
+              br(),
+              h3(HTML("<b>❏ Isotope Data</b>")),
+              br(),
+              DTOutput("mapisotbl"), 
+              br(),
+              h3(HTML("<b>❏ Reference Information</b>")),
+              br(),
+              DTOutput("mapreftbl"))
           )
         )
     ), # end of Search Data
