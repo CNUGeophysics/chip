@@ -359,7 +359,20 @@ output$abt <- renderUI({
         load("RData/UserRData/value_smnd_custom.RData")
         value_smnd <- c(value_smnd, value_smnd_custom)
       }
-      value_smnd[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_smnd[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "007"){
       
@@ -1279,7 +1292,21 @@ output$abt <- renderUI({
         load("RData/UserRData/value_smnd_custom.RData")
         value_smnd <- c(value_smnd, value_smnd_custom)
       }
-      value_smnd[[paste0(subrefageval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_smnd[[paste0(subrefageval(), ".xlsx")]][-c(1)])
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
+
       
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "007"){
       
@@ -2158,8 +2185,21 @@ output$abt <- renderUI({
         load("RData/UserRData/value_smnd_custom.RData")
         value_smnd <- c(value_smnd, value_smnd_custom)
       }
-      value_smnd[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
       
+      df_temp<- as.data.frame(value_smnd[[paste0(subsplmetdata(), ".xlsx")]][-c(1)])
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
+
     }else if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "007"){
       
       # method 007 --------------------------------------------------------------
@@ -3155,7 +3195,19 @@ output$abt <- renderUI({
         value_smnd <- c(value_smnd, value_smnd_custom)
       }
       
-      value_smnd[[paste0(subagedata(), ".xlsx")]][-c(1)]
+      df_temp<- as.data.frame(value_smnd[[paste0(subagedata(), ".xlsx")]][-c(1)])
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "007"){
       
