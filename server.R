@@ -325,7 +325,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_osl_custom.RData")
         value_osl <- c(value_osl, value_osl_custom)
       }
-      value_osl[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_osl[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      if("Age.SD" %in% names(df_temp) ==T){
+        df_temp$Age.SD <- df_temp$Age.SD*0.001
+        names(df_temp)[names(df_temp) == "Age.SD"] = "Age.SD(Ka)"
+      }
+      
+      if("Age.SE" %in% names(df_temp) ==T){
+        df_temp$Age.SE <- df_temp$Age.SE*0.001
+        names(df_temp)[names(df_temp) == "Age.SE"] = "Age.SE(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "006"){
       
@@ -1222,7 +1245,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_osl_custom.RData")
         value_osl <- c(value_osl, value_osl_custom)
       }
-      value_osl[[paste0(subrefageval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_osl[[paste0(subrefageval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      if("Age.SD" %in% names(df_temp) ==T){
+        df_temp$Age.SD <- df_temp$Age.SD*0.001
+        names(df_temp)[names(df_temp) == "Age.SD"] = "Age.SD(Ka)"
+      }
+      
+      if("Age.SE" %in% names(df_temp) ==T){
+        df_temp$Age.SE <- df_temp$Age.SE*0.001
+        names(df_temp)[names(df_temp) == "Age.SE"] = "Age.SE(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "006"){
       
@@ -2078,7 +2124,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_osl_custom.RData")
         value_osl <- c(value_osl, value_osl_custom)
       }
-      value_osl[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_osl[[paste0(subsplmetdata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      if("Age.SD" %in% names(df_temp) ==T){
+        df_temp$Age.SD <- df_temp$Age.SD*0.001
+        names(df_temp)[names(df_temp) == "Age.SD"] = "Age.SD(Ka)"
+      }
+      
+      if("Age.SE" %in% names(df_temp) ==T){
+        df_temp$Age.SE <- df_temp$Age.SE*0.001
+        names(df_temp)[names(df_temp) == "Age.SE"] = "Age.SE(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "006"){
       
@@ -3052,7 +3121,29 @@ output$abt <- renderUI({
         value_osl <- c(value_osl, value_osl_custom)
       }
       
-      value_osl[[paste0(subagedata(), ".xlsx")]][-c(1)]
+      df_temp<- as.data.frame(value_osl[[paste0(subagedata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      if("Age.SD" %in% names(df_temp) ==T){
+        df_temp$Age.SD <- df_temp$Age.SD*0.001
+        names(df_temp)[names(df_temp) == "Age.SD"] = "Age.SD(Ka)"
+      }
+      
+      if("Age.SE" %in% names(df_temp) ==T){
+        df_temp$Age.SE <- df_temp$Age.SE*0.001
+        names(df_temp)[names(df_temp) == "Age.SE"] = "Age.SE(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "006"){
       
