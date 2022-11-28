@@ -221,7 +221,20 @@ output$abt <- renderUI({
         load("RData/UserRData/value_cosmo_custom.RData")
         value_cosmo <- c(value_cosmo, value_cosmo_custom)
       }
-      value_cosmo[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_cosmo[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "003"){
       
@@ -1072,7 +1085,20 @@ output$abt <- renderUI({
         load("RData/UserRData/value_cosmo_custom.RData")
         value_cosmo <- c(value_cosmo, value_cosmo_custom)
       }
-      value_cosmo[[paste0(subrefageval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_cosmo[[paste0(subrefageval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "003"){
       
@@ -1882,7 +1908,20 @@ output$abt <- renderUI({
         load("RData/UserRData/value_cosmo_custom.RData")
         value_cosmo <- c(value_cosmo, value_cosmo_custom)
       }
-      value_cosmo[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_cosmo[[paste0(subsplmetdata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "003"){
       
@@ -2809,7 +2848,20 @@ output$abt <- renderUI({
         value_cosmo <- c(value_cosmo, value_cosmo_custom)
       }
       
-      value_cosmo[[paste0(subagedata(), ".xlsx")]][-c(1)]
+      df_temp<- as.data.frame(value_cosmo[[paste0(subagedata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ka)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ka)"
+      }
+      
+      df <- df_temp
+
       
     }else if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "003"){
       
