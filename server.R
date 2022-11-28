@@ -183,7 +183,35 @@ output$abt <- renderUI({
         load("RData/UserRData/value_ar_custom.RData")
         value_ar <- c(value_ar, value_ar_custom)
       }
-      value_ar[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_ar[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("Plateau.Age" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age <- df_temp$Plateau.Age*0.001 
+        df_temp$Plateau.Age <- format(round(df_temp$Plateau.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age"] = "Plateau.Age(Ka)"
+      }
+      
+      if("Plateau.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age.SD <- df_temp$Plateau.Age.SD*0.001 
+        df_temp$Plateau.Age.SD <- format(round(df_temp$Plateau.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age.SD"] = "Plateau.Age.SD(Ka)"
+      }
+      
+      if("Intergrated.Age" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age <- df_temp$Intergrated.Age*0.001 
+        df_temp$Intergrated.Age <- format(round(df_temp$Intergrated.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age"] = "Intergrated.Age(Ka)"
+      }
+      
+      if("Intergrated.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age.SD <- df_temp$Intergrated.Age.SD*0.001 
+        df_temp$Intergrated.Age.SD <- format(round(df_temp$Intergrated.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age.SD"] = "Intergrated.Age.SD(Ka)"
+      }
+      
+      df <- df_temp
+      
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "002"){
       
       # method 002 --------------------------------------------------------------
@@ -1006,7 +1034,35 @@ output$abt <- renderUI({
         load("RData/UserRData/value_ar_custom.RData")
         value_ar <- c(value_ar, value_ar_custom)
       }
-      value_ar[[paste0(subrefageval(), ".xlsx")]][-c(1)]
+
+      df_temp<- as.data.frame(value_ar[[paste0(subrefageval(), ".xlsx")]][-c(1)])
+      
+      if("Plateau.Age" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age <- df_temp$Plateau.Age*0.001 
+        df_temp$Plateau.Age <- format(round(df_temp$Plateau.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age"] = "Plateau.Age(Ka)"
+      }
+      
+      if("Plateau.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age.SD <- df_temp$Plateau.Age.SD*0.001 
+        df_temp$Plateau.Age.SD <- format(round(df_temp$Plateau.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age.SD"] = "Plateau.Age.SD(Ka)"
+      }
+      
+      if("Intergrated.Age" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age <- df_temp$Intergrated.Age*0.001 
+        df_temp$Intergrated.Age <- format(round(df_temp$Intergrated.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age"] = "Intergrated.Age(Ka)"
+      }
+      
+      if("Intergrated.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age.SD <- df_temp$Intergrated.Age.SD*0.001 
+        df_temp$Intergrated.Age.SD <- format(round(df_temp$Intergrated.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age.SD"] = "Intergrated.Age.SD(Ka)"
+      }
+      
+      df <- df_temp
+      
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "002"){
       
       # method 002 --------------------------------------------------------------
@@ -1789,7 +1845,33 @@ output$abt <- renderUI({
         value_ar <- c(value_ar, value_ar_custom)
       }
       
-      value_ar[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
+      df_temp<- as.data.frame(value_ar[[paste0(subsplmetdata(), ".xlsx")]][-c(1)])
+      
+      if("Plateau.Age" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age <- df_temp$Plateau.Age*0.001 
+        df_temp$Plateau.Age <- format(round(df_temp$Plateau.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age"] = "Plateau.Age(Ka)"
+      }
+      
+      if("Plateau.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age.SD <- df_temp$Plateau.Age.SD*0.001 
+        df_temp$Plateau.Age.SD <- format(round(df_temp$Plateau.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age.SD"] = "Plateau.Age.SD(Ka)"
+      }
+      
+      if("Intergrated.Age" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age <- df_temp$Intergrated.Age*0.001 
+        df_temp$Intergrated.Age <- format(round(df_temp$Intergrated.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age"] = "Intergrated.Age(Ka)"
+      }
+      
+      if("Intergrated.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age.SD <- df_temp$Intergrated.Age.SD*0.001 
+        df_temp$Intergrated.Age.SD <- format(round(df_temp$Intergrated.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age.SD"] = "Intergrated.Age.SD(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "002"){
       
@@ -2689,7 +2771,33 @@ output$abt <- renderUI({
         value_ar <- c(value_ar, value_ar_custom)
       }
       
-      value_ar[[paste0(subagedata(), ".xlsx")]][-c(1)]
+      df_temp<- as.data.frame(value_ar[[paste0(subagedata(), ".xlsx")]][-c(1)])
+      
+      if("Plateau.Age" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age <- df_temp$Plateau.Age*0.001 
+        df_temp$Plateau.Age <- format(round(df_temp$Plateau.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age"] = "Plateau.Age(Ka)"
+      }
+      
+      if("Plateau.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Plateau.Age.SD <- df_temp$Plateau.Age.SD*0.001 
+        df_temp$Plateau.Age.SD <- format(round(df_temp$Plateau.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Plateau.Age.SD"] = "Plateau.Age.SD(Ka)"
+      }
+      
+      if("Intergrated.Age" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age <- df_temp$Intergrated.Age*0.001 
+        df_temp$Intergrated.Age <- format(round(df_temp$Intergrated.Age, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age"] = "Intergrated.Age(Ka)"
+      }
+      
+      if("Intergrated.Age.SD" %in% names(df_temp) ==T){
+        df_temp$Intergrated.Age.SD <- df_temp$Intergrated.Age.SD*0.001 
+        df_temp$Intergrated.Age.SD <- format(round(df_temp$Intergrated.Age.SD, digits = 0), nsmall = 0)
+        names(df_temp)[names(df_temp) == "Intergrated.Age.SD"] = "Intergrated.Age.SD(Ka)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "002"){
       
@@ -3633,7 +3741,33 @@ output$abt <- renderUI({
           value_ar <- c(value_ar, value_ar_custom)
         }
         
-        value_ar[[paste0(submapspldata(), ".xlsx")]][-c(1)]
+        df_temp<- as.data.frame(value_ar[[paste0(submapspldata(), ".xlsx")]][-c(1)])
+        
+        if("Plateau.Age" %in% names(df_temp) ==T){
+          df_temp$Plateau.Age <- df_temp$Plateau.Age*0.001 
+          df_temp$Plateau.Age <- format(round(df_temp$Plateau.Age, digits = 0), nsmall = 0)
+          names(df_temp)[names(df_temp) == "Plateau.Age"] = "Plateau.Age(Ka)"
+        }
+        
+        if("Plateau.Age.SD" %in% names(df_temp) ==T){
+          df_temp$Plateau.Age.SD <- df_temp$Plateau.Age.SD*0.001 
+          df_temp$Plateau.Age.SD <- format(round(df_temp$Plateau.Age.SD, digits = 0), nsmall = 0)
+          names(df_temp)[names(df_temp) == "Plateau.Age.SD"] = "Plateau.Age.SD(Ka)"
+        }
+        
+        if("Intergrated.Age" %in% names(df_temp) ==T){
+          df_temp$Intergrated.Age <- df_temp$Intergrated.Age*0.001 
+          df_temp$Intergrated.Age <- format(round(df_temp$Intergrated.Age, digits = 0), nsmall = 0)
+          names(df_temp)[names(df_temp) == "Intergrated.Age"] = "Intergrated.Age(Ka)"
+        }
+        
+        if("Intergrated.Age.SD" %in% names(df_temp) ==T){
+          df_temp$Intergrated.Age.SD <- df_temp$Intergrated.Age.SD*0.001 
+          df_temp$Intergrated.Age.SD <- format(round(df_temp$Intergrated.Age.SD, digits = 0), nsmall = 0)
+          names(df_temp)[names(df_temp) == "Intergrated.Age.SD"] = "Intergrated.Age.SD(Ka)"
+        }
+        
+        df <- df_temp
         
       }else if(substr(submapspldata(), nchar(submapspldata())-2, nchar(submapspldata())) == "002"){
         
