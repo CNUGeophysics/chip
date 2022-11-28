@@ -127,11 +127,18 @@ output$abt <- renderUI({
     
     if(file.exists("RData/UserRData/spl_custom.RData")){
       load("RData/UserRData/spl_custom.RData")
+      load("RData/UserRData/age_custom.RData")
       if(nrow(spl_custom) == 0){
         spl
       }else if(nrow(spl_custom) != 0){
         spl <- rbind(spl, spl_custom)
-      }  
+      } 
+      
+      if(nrow(age_custom) == 0){
+        age
+      }else if(nrow(age_custom) != 0){
+        age <- rbind(age, age_custom)
+      }
     }
     
     selected_row <- input$refmettbl_rows_selected
@@ -141,13 +148,16 @@ output$abt <- renderUI({
       spl$Longitude <- format(spl$Longitude, digits = 4, nsmall = 4)
       spl$Latitude <- format(spl$Latitude, digits = 4, nsmall = 4)
       
-      spl <- spl %>% 
-        mutate(spl, Method = input$refmet)
+      spl <- join(spl, age, by = c("RefID", "Sample"))
       
-      spl <- join(spl, met_cd, by = "Method")
+      spl <- spl[,-c(8)]
       
       spl <- spl %>% 
         mutate(spl, ID = paste0(spl$RefID, spl$Sample_seq, spl$Method_cd))
+      
+      spl <- join(spl, met_cd, by = "Method_cd")
+
+      spl <- spl[spl$Method %in% input$refmet,]
       
       spl <- spl[spl$RefID %in% selected_sample, ]
     }
@@ -158,7 +168,7 @@ output$abt <- renderUI({
     subrefmetdata(),
     rownames = F,
     selection = "single",
-    options = list(columnDefs = list(list(visible = F, targets = c(0,1,7:9))))
+    options = list(columnDefs = list(list(visible = F, targets = c(0,1,7:15))))
     )
   
   output$cntref_met_spl <- renderUI({
@@ -260,6 +270,16 @@ output$abt <- renderUI({
         df_temp$Delta.Radiogenic.Ar36 <- format(df_temp$Delta.Radiogenic.Ar36, scientific = F)
       }
       
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.000001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ma)"
+      }
+
       df <- df_temp
       
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "004"){
@@ -1124,6 +1144,16 @@ output$abt <- renderUI({
         df_temp$Delta.Radiogenic.Ar36 <- format(df_temp$Delta.Radiogenic.Ar36, scientific = F)
       }
       
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.000001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ma)"
+      }
+      
       df <- df_temp
       
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "004"){
@@ -1945,6 +1975,16 @@ output$abt <- renderUI({
       
       if("Delta.Radiogenic.Ar36" %in% names(df_temp) == T){
         df_temp$Delta.Radiogenic.Ar36 <- format(df_temp$Delta.Radiogenic.Ar36, scientific = F)
+      }
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.000001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ma)"
       }
       
       df <- df_temp
@@ -2885,6 +2925,16 @@ output$abt <- renderUI({
       
       if("Delta.Radiogenic.Ar36" %in% names(df_temp) == T){
         df_temp$Delta.Radiogenic.Ar36 <- format(df_temp$Delta.Radiogenic.Ar36, scientific = F)
+      }
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("Age.PM" %in% names(df_temp) ==T){
+        df_temp$Age.PM <- df_temp$Age.PM*0.000001
+        names(df_temp)[names(df_temp) == "Age.PM"] = "Age.PM(Ma)"
       }
       
       df <- df_temp
