@@ -291,7 +291,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_luhf_custom.RData")
         value_luhf <- c(value_luhf, value_luhf_custom)
       }
-      value_luhf[[paste0(subrefmetval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_luhf[[paste0(subrefmetval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDMc" %in% names(df_temp) ==T){
+        df_temp$TDMc <- df_temp$TDMc*0.000001
+        names(df_temp)[names(df_temp) == "TDMc"] = "TDMc(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefmetval(), nchar(subrefmetval())-2, nchar(subrefmetval())) == "005"){
       
@@ -1165,7 +1188,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_luhf_custom.RData")
         value_luhf <- c(value_luhf, value_luhf_custom)
       }
-      value_luhf[[paste0(subrefageval(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_luhf[[paste0(subrefageval(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDMc" %in% names(df_temp) ==T){
+        df_temp$TDMc <- df_temp$TDMc*0.000001
+        names(df_temp)[names(df_temp) == "TDMc"] = "TDMc(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subrefageval(), nchar(subrefageval())-2, nchar(subrefageval())) == "005"){
       
@@ -1998,7 +2044,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_luhf_custom.RData")
         value_luhf <- c(value_luhf, value_luhf_custom)
       }
-      value_luhf[[paste0(subsplmetdata(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_luhf[[paste0(subsplmetdata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDMc" %in% names(df_temp) ==T){
+        df_temp$TDMc <- df_temp$TDMc*0.000001
+        names(df_temp)[names(df_temp) == "TDMc"] = "TDMc(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subsplmetdata(), nchar(subsplmetdata())-2, nchar(subsplmetdata())) == "005"){
       
@@ -2948,7 +3017,30 @@ output$abt <- renderUI({
         load("RData/UserRData/value_luhf_custom.RData")
         value_luhf <- c(value_luhf, value_luhf_custom)
       }
-      value_luhf[[paste0(subagedata(), ".xlsx")]][-c(1)]
+      
+      df_temp<- as.data.frame(value_luhf[[paste0(subagedata(), ".xlsx")]][-c(1)])
+      
+      if("Age" %in% names(df_temp) ==T){
+        df_temp$Age <- df_temp$Age*0.000001
+        names(df_temp)[names(df_temp) == "Age"] = "Age(Ma)"
+      }
+      
+      if("TDM" %in% names(df_temp) ==T){
+        df_temp$TDM <- df_temp$TDM*0.000001
+        names(df_temp)[names(df_temp) == "TDM"] = "TDM(Ma)"
+      }
+      
+      if("TDMc" %in% names(df_temp) ==T){
+        df_temp$TDMc <- df_temp$TDMc*0.000001
+        names(df_temp)[names(df_temp) == "TDMc"] = "TDMc(Ma)"
+      }
+      
+      if("TDM2" %in% names(df_temp) ==T){
+        df_temp$TDM2 <- df_temp$TDM2*0.000001
+        names(df_temp)[names(df_temp) == "TDM2"] = "TDM2(Ma)"
+      }
+      
+      df <- df_temp
       
     }else if(substr(subagedata(), nchar(subagedata())-2, nchar(subagedata())) == "005"){
       
