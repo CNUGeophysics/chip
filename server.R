@@ -3967,6 +3967,13 @@ output$abt <- renderUI({
     age <- join(age, ref, by = c("RefID"))
     age <- age[,-c(12)]
     
+      age$Age <- as.numeric(age$Age)*0.000001
+      names(age)[names(age) == "Age"] = "Age(Ma)"
+      age$Age_min <- as.numeric(age$Age_min)*0.000001
+      names(age)[names(age) == "Age_min"] = "Age_min(Ma)"
+      age$Age_max <- as.numeric(age$Age_max)*0.000001
+      names(age)[names(age) == "Age_max"] = "Age_max(Ma)"
+    
     age <- age %>% 
       mutate(age, ID = paste0(age$RefID, age$Sample_seq, age$Method_cd))
     
