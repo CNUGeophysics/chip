@@ -18,6 +18,11 @@ server <- function(input, output, session){
     load("RData/UserRData/age_custom.RData")
   }
   
+
+
+
+
+  
   # ??
   decimal <- function(data){
     
